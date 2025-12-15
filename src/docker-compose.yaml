@@ -46,7 +46,7 @@ services:
       MONGODB_PASSWORD: PASSWORD
       MONGODB_DATABASE: ratings
     volumes:
-      - mongo-data:/data/db
+      - "./databases:/docker-entrypoint-initdb.d"
 
   reviews:
     build:
@@ -55,7 +55,3 @@ services:
     image: reviews-service:v1
     ports:
       - "9080:9080"
-
-volumes:
-  mongo-data:
-    driver: local
