@@ -10,4 +10,4 @@ COPY . .
 
 EXPOSE 3000
 
-CMD ["python", "productpage.py"]
+CMD ["python", "productpage.py", "3000"]

@@ -10,4 +10,4 @@ COPY . .
 
 EXPOSE 8080
 
-CMD ["ruby", "details.rb"]
+CMD ["ruby", "details.rb", "8080"]

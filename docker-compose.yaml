@@ -1,0 +1,66 @@
+services:
+  details:
+    build:
+      context: ./src/details
+      dockerfile: Dockerfile
+    image: details-service:v1
+    ports:
+      - "8080:8080"
+    environment: 
+      ENABLE_EXTERNAL_BOOK_SERVICE: false
+      DO_NOT_ENCRYPT: false
+
+  productpage:
+    build:
+      context: ./src/productpage 
+      dockerfile: Dockerfile
+    image: productpage-service:v1
+    environment:
+      DETAILS_HOSTNAME: http://localhost:8080
+      RATINGS_HOSTNAME: http://localhost:5000
+      REVIEWS_HOSTNAME: http://localhost:9080
+    ports:
+      - "3000:3000"
+
+  ratings:
+    build:
+      context: ./src/ratings
+      dockerfile: Dockerfile
+    image: ratings-service:v2
+    ports:
+      - "5000:5000"
+    environment:
+      SERVICE_VERSION: v2
+      MONGO_DB_URL: mongodb://db:27017
+      MONGODB_USERNAME: SOME_USERNAME
+      MONGODB_PASSWORD: SOME_PASSWORD
+      MONGO_DB_NAME: ratings
+    depends_on:
+      - db
+
+  db:
+    image: bitnami/mongodb:latest
+    container_name: mongodb
+    restart: always
+    ports:
+      - "27017:27017"
+    environment:
+      MONGODB_ROOT_PASSWORD: SOME_PASSWORD
+      MONGODB_USERNAME: SOME_USERNAME
+      MONGODB_PASSWORD: SOME_PASSWORD
+      MONGODB_DATABASE: ratings
+    volumes:
+      - "./src/ratings/databases:/docker-entrypoint-initdb.d"
+
+  reviews:
+    build:
+      context: ./src/reviews
+      dockerfile: Dockerfile
+    image: reviews-service:v1
+    ports:
+      - "9080:9080"
+    environment:
+      STAR_COLOR: black
+      RATINGS_SERVICE: http://localhost:5000
+      #HOSTNAME: 
+      #CLUSTER_NAME: 
