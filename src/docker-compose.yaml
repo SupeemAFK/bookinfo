@@ -1,0 +1,53 @@
+services:
+  details:
+    build:
+      context: ./details
+      dockerfile: Dockerfile
+    image: details-service:v1
+    ports:
+      - "8080:8080"
+    environment:
+      - SERVICE_VERSION=v1
+    networks:
+      - app-net
+
+  productpage:
+    build:
+      context: ./productpage 
+      dockerfile: Dockerfile
+    image: productpage-service:v1
+    ports:
+      - "3000:3000"
+    environment:
+      - SERVICE_VERSION=v1
+    networks:
+      - app-net
+
+  ratings:
+    build:
+      context: ./ratings
+      dockerfile: Dockerfile
+    image: ratings-service:v1
+    ports:
+      - "5000:5000"
+    environment:
+      - SERVICE_VERSION=v1
+    networks:
+      - app-net
+
+  reviews:
+    build:
+      context: ./reviews
+      dockerfile: Dockerfile
+    image: reviews-service:v1
+    ports:
+      - "9080:9080"
+    environment:
+      - SERVICE_VERSION=v1
+      - ENABLE_RATINGS=true
+    networks:
+      - app-net
+
+networks:
+  app-net:
+    driver: bridge
