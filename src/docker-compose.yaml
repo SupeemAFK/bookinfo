@@ -6,10 +6,9 @@ services:
     image: details-service:v1
     ports:
       - "8080:8080"
-    environment:
-      - SERVICE_VERSION=v1
-    networks:
-      - app-net
+    environment: 
+      ENABLE_EXTERNAL_BOOK_SERVICE: true
+      DO_NOT_ENCRYPT: true
 
   productpage:
     build:
@@ -18,22 +17,36 @@ services:
     image: productpage-service:v1
     ports:
       - "3000:3000"
-    environment:
-      - SERVICE_VERSION=v1
-    networks:
-      - app-net
 
   ratings:
     build:
       context: ./ratings
       dockerfile: Dockerfile
-    image: ratings-service:v1
+    image: ratings-service:v2
     ports:
       - "5000:5000"
     environment:
-      - SERVICE_VERSION=v1
-    networks:
-      - app-net
+      - SERVICE_VERSION: v2
+      - MONGO_DB_URL: mongodb://db:27017/ratings
+        MONGODB_USERNAME: USERNAME
+        MONGODB_PASSWORD: PASSWORD
+      - MONGO_DB_NAME: ratings
+    depends_on:
+      - db
+
+  db:
+    image: mongo:latest
+    container_name: mongodb
+    restart: always
+    ports:
+      - "27017:27017"
+    environment:
+      MONGODB_ROOT_PASSWORD: PASSWORD
+      MONGODB_USERNAME: USERNAME
+      MONGODB_PASSWORD: PASSWORD
+      MONGODB_DATABASE: ratings
+    volumes:
+      - mongo-data:/data/db
 
   reviews:
     build:
@@ -42,12 +55,7 @@ services:
     image: reviews-service:v1
     ports:
       - "9080:9080"
-    environment:
-      - SERVICE_VERSION=v1
-      - ENABLE_RATINGS=true
-    networks:
-      - app-net
 
-networks:
-  app-net:
-    driver: bridge
+volumes:
+  mongo-data:
+    driver: local
