@@ -62,5 +62,5 @@ services:
     environment:
       STAR_COLOR: black
       RATINGS_SERVICE: http://localhost:5000
-      #HOSTNAME: 
-      #CLUSTER_NAME: 
+      HOSTNAME: reviews-service-1
+      CLUSTER_NAME: cluster-1
