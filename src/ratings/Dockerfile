@@ -8,6 +8,6 @@ RUN npm install
 
 COPY . .
 
-EXPOSE 5000
+EXPOSE 9080
 
-CMD ["npm", "start"]
+CMD ["node", "ratings.js", "9080"]

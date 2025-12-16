@@ -8,6 +8,6 @@ RUN pip install -r requirements.txt
 
 COPY . .
 
-EXPOSE 3000
+EXPOSE 9080
 
-CMD ["python", "productpage.py", "3000"]
+CMD ["python", "productpage.py", "9080"]

@@ -8,6 +8,6 @@ RUN bundle install
 
 COPY . .
 
-EXPOSE 8080
+EXPOSE 9080
 
-CMD ["ruby", "details.rb", "8080"]
+CMD ["ruby", "details.rb", "9080"]
