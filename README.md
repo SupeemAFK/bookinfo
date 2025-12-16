@@ -5,9 +5,14 @@ This is a way to run app with docker compose it use nginx as ingress to control 
 nginx will run on **port:9080**
 
 
-### Start application and services
+### Start application and all services
 ```
 docker compose up -d
+```
+
+### Stop application and all services
+```
+docker compose down
 ```
 
 After run compose you can access app or services below.
