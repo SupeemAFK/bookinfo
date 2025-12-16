@@ -1,4 +1,4 @@
-# Bookinfo Application for Worksho
+# Bookinfo Application for Workshop
 
 This is a way to run app with docker compose it use nginx as ingress to control traffic for each services.
 
@@ -17,7 +17,9 @@ After run compose you can access app or services below.
     - reviews-service: http://reviews:9080
     - ratings-service: http://ratings:9080
     - db: mongodb://db:27017
+
 <br />
+
 - The followings are **hostname** outside use for Postman
     - productpage-service: http://localhost:9080
     - details-service: http://localhost:9080/details
