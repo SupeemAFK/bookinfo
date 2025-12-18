@@ -1,0 +1,54 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: productpage-v1
+  labels:
+    app: productpage
+    version: v1
+spec:
+  replicas: {{ .Values.productpage.replicas }}
+  selector:
+    matchLabels:
+      app: productpage
+      version: v1
+  template:
+    metadata:
+      labels:
+        app: productpage
+        version: v1
+    spec:
+      {{- if .Values.imagePullSecrets }}
+      imagePullSecrets:
+        {{- range .Values.imagePullSecrets }}
+        - name: {{ .name }}
+        {{- end }}
+      {{- end }}
+      containers:
+      - name: productpage
+        image: "{{ .Values.productpage.image.repository }}:{{ .Values.productpage.image.tag }}"
+        imagePullPolicy: {{ .Values.productpage.image.pullPolicy }}
+        ports:
+        - containerPort: {{ .Values.productpage.service.port }}
+        env:
+        - name: DETAILS_HOSTNAME
+          value: "{{ .Values.productpage.env.detailsHostname }}"
+        - name: RATINGS_HOSTNAME
+          value: "{{ .Values.productpage.env.ratingsHostname }}"
+        - name: REVIEWS_HOSTNAME
+          value: "{{ .Values.productpage.env.reviewsHostname }}"
+        - name: FLOOD_FACTOR
+          value: "{{ .Values.productpage.env.floodFactor }}"
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: productpage
+  labels:
+    app: productpage
+spec:
+  type: ClusterIP
+  ports:
+  - port: {{ .Values.productpage.service.port }}
+    name: http
+  selector:
+    app: productpage

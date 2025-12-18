@@ -2,7 +2,6 @@ apiVersion: apps/v1
 kind: Deployment
 metadata:
   name: details-v1
-  namespace: bookinfo-dev
 spec:
   replicas: 1
   selector:
@@ -26,3 +25,17 @@ spec:
           value: "false"
         - name: DO_NOT_ENCRYPT
           value: "false"
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: details
+  labels:
+    app: details
+spec:
+  type: ClusterIP
+  ports:
+  - port: 9080
+    name: http
+  selector:
+    app: details

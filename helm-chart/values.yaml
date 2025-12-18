@@ -1,0 +1,74 @@
+imagePullSecrets:
+  - name: harbor-cred
+
+ingress:
+  enabled: true
+  className: nginx
+  host: bookinfo-supeem-dev.opsta.in.th 
+  
+  tls:
+    enabled: true
+    secretName: bookinfo-tls-secret
+    issuer: letsencrypt-prod     
+
+details:
+  replicas: 1
+  image:
+    repository: registry-supeem.opsta.in.th/library/details-service
+    tag: "v1"
+    pullPolicy: Always
+  service:
+    port: 9080
+  env:
+    enableExternalBookService: "false"
+    doNotEncrypt: "false"
+
+ratings:
+  replicas: 1
+  image:
+    repository: registry-supeem.opsta.in.th/library/ratings-service
+    tag: "v2"
+    pullPolicy: Always
+  service:
+    port: 9080
+  
+  env:
+    version: "v2"
+    mongoUrl: "mongodb://mongodb:27017"
+    dbName: "ratings"
+
+  mongodbSecret:
+    name: mongodb-creds
+    usernameKey: db-username
+    passwordKey: mongodb-passwords
+
+reviews:
+  replicas: 1
+  version: "v1"  
+  image:
+    repository: registry-supeem.opsta.in.th/library/reviews-service
+    tag: "v1"
+    pullPolicy: Always
+  service:
+    port: 9080
+  
+  env:
+    starColor: "black"
+    enableRatings: "true"
+    ratingsService: "http://ratings:9080"
+    clusterName: "cluster-1"
+
+productpage:
+  replicas: 1
+  image:
+    repository: registry-supeem.opsta.in.th/library/productpage-service
+    tag: "v1"
+    pullPolicy: Always
+  service:
+    port: 9080
+  
+  env:
+    detailsHostname: "http://details:9080"
+    ratingsHostname: "http://ratings:9080"
+    reviewsHostname: "http://reviews:9080"
+    floodFactor: "0"

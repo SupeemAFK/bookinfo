@@ -1,0 +1,50 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: details-v1
+  labels:
+    app: details
+    version: v1
+spec:
+  replicas: {{ .Values.details.replicas }}
+  selector:
+    matchLabels:
+      app: details
+      version: v1
+  template:
+    metadata:
+      labels:
+        app: details
+        version: v1
+    spec:
+      {{- if .Values.imagePullSecrets }}
+      imagePullSecrets:
+        {{- range .Values.imagePullSecrets }}
+        - name: {{ .name }}
+        {{- end }}
+      {{- end }}
+      containers:
+      - name: details
+        image: "{{ .Values.details.image.repository }}:{{ .Values.details.image.tag }}"
+        imagePullPolicy: {{ .Values.details.image.pullPolicy }}
+        ports:
+        - containerPort: {{ .Values.details.service.port }}
+        env:
+        - name: ENABLE_EXTERNAL_BOOK_SERVICE
+          value: "{{ .Values.details.env.enableExternalBookService }}"
+        - name: DO_NOT_ENCRYPT
+          value: "{{ .Values.details.env.doNotEncrypt }}"
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: details
+  labels:
+    app: details
+spec:
+  type: ClusterIP
+  ports:
+  - port: {{ .Values.details.service.port }}
+    name: http
+  selector:
+    app: details

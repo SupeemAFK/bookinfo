@@ -4,11 +4,7 @@ kind: Kustomization
 namespace: bookinfo-dev
 
 resources:
-- ../../base-app/ratings
-- ../../base-app/reviews
-- ../../base-app/details
-- ../../base-app/productpage
-- ../../base-app/ingress
+- ../../base-app
 
 patches:
 - path: ingress-patch.yaml
