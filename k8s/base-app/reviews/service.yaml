@@ -1,0 +1,32 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: reviews-v1
+  namespace: bookinfo-dev
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: reviews
+  template:
+    metadata:
+      labels:
+        app: reviews
+    spec:
+      imagePullSecrets:
+      - name: harbor-cred
+      containers:
+      - name: reviews
+        image: registry-supeem.opsta.in.th/library/reviews-service:v1
+        imagePullPolicy: Always
+        ports:
+        - containerPort: 9080
+        env:
+        - name: STAR_COLOR
+          value: "black"
+        - name: ENABLE_RATINGS
+          value: "true"
+        - name: RATINGS_SERVICE
+          value: "http://ratings:9080"
+        - name: CLUSTER_NAME
+          value: "cluster-1"

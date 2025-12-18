@@ -1,0 +1,32 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: productpage-v1
+  namespace: bookinfo-dev
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: productpage
+  template:
+    metadata:
+      labels:
+        app: productpage
+    spec:
+      imagePullSecrets:
+      - name: harbor-cred
+      containers:
+      - name: productpage
+        image: registry-supeem.opsta.in.th/library/productpage-service:v1
+        imagePullPolicy: Always
+        ports:
+        - containerPort: 9080
+        env:
+        - name: DETAILS_HOSTNAME
+          value: "http://details:9080"
+        - name: RATINGS_HOSTNAME
+          value: "http://ratings:9080"
+        - name: REVIEWS_HOSTNAME
+          value: "http://reviews:9080"
+        - name: FLOOD_FACTOR
+          value: "0"
