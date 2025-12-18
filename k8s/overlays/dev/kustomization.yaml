@@ -4,7 +4,6 @@ kind: Kustomization
 namespace: bookinfo-dev
 
 resources:
-- ../../base-app/database
 - ../../base-app/ratings
 - ../../base-app/reviews
 - ../../base-app/details
