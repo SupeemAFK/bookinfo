@@ -1,15 +1,19 @@
+environment: "prod"
+
+global:
+  harborJsonConfig: '{"auths": {"registry-supeem.opsta.in.th": {"auth": "eyJhdXRocyI6eyJyZWdpc3RyeS1zdXBlZW0ub3BzdGEuaW4udGgiOnsidXNlcm5hbWUiOiJhZG1pbiIsInBhc3N3b3JkIjoiaVhWSjhtdldYSUFJcUVndm8yVCt0cFp5RG4vQllHWTkiLCJhdXRoIjoiWVdSdGFXNDZhVmhXU2podGRsZFlTVUZKY1VWbmRtOHlWQ3QwY0ZwNVJHNHZRbGxIV1RrPSJ9fX0="}}}'
+
 imagePullSecrets:
-  - name: harbor-cred
+  - name: harbor-creds-prod 
 
 ingress:
   enabled: true
   className: nginx
-  host: bookinfo-supeem-dev.opsta.in.th 
-  
+  host: bookinfo-supeem.opsta.in.th
   tls:
     enabled: true
     secretName: bookinfo-tls-secret
-    issuer: letsencrypt-prod     
+    issuer: letsencrypt-prod
 
 details:
   replicas: 1
@@ -34,24 +38,23 @@ ratings:
   
   env:
     version: "v2"
-    mongoUrl: "mongodb://mongodb:27017"
+    mongoUrl: "mongodb://mongodb:27017" 
     dbName: "ratings"
-
+  
   mongodbSecret:
-    name: mongodb-creds
+    name: mongodb-creds-prod
     usernameKey: db-username
     passwordKey: mongodb-passwords
 
 reviews:
   replicas: 1
-  version: "v1"  
+  version: "v1"
   image:
     repository: registry-supeem.opsta.in.th/library/reviews-service
     tag: "v1"
     pullPolicy: Always
   service:
     port: 9080
-  
   env:
     starColor: "black"
     enableRatings: "true"
@@ -66,9 +69,15 @@ productpage:
     pullPolicy: Always
   service:
     port: 9080
-  
   env:
     detailsHostname: "http://details:9080"
     ratingsHostname: "http://ratings:9080"
     reviewsHostname: "http://reviews:9080"
     floodFactor: "0"
+
+mongodb:
+  auth:
+    rootPassword: "XH8LXXCA7ocbZdtSGiPd1i30l7AlnJce"
+    username: "user1"
+    password: "XH8LXXCA7ocbZdtSGiPd1i30l7AlnJce"
+    database: "ratings"
