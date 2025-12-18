@@ -3,7 +3,6 @@ kind: Kustomization
 
 namespace: bookinfo-dev
 
-
 resources:
 - ../../base-app/database
 - ../../base-app/ratings
@@ -17,7 +16,7 @@ patches:
   target:
     kind: Ingress
     name: bookinfo-ingress
-    
+
 labels:
 - includeSelectors: true
   pairs:
